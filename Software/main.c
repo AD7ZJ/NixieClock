@@ -92,7 +92,7 @@ TRunState gClockState = RUNNING;
 // 0             hours
 // 1             mins
 // 2             crystal offset in ppm
-__EEPROM_DATA(12, 0, 0, 0, 0, 0, 0, 0);
+__EEPROM_DATA(12, 0, 130, 0, 0, 0, 0, 0);
 
 /*
  * Initialize PIC peripherals
@@ -204,7 +204,7 @@ void SetClock()
             if (tick)
             {
                 if (++gDispState > MINONE)
-                    gDispState = 0;
+                    gDispState = HOURONE;
                 PORTB = 0x00;
                 PORTC = 0x00;
                 __delay_ms(100);
@@ -310,7 +310,7 @@ void SetCal()
             if (tick)
             {
                 if (++gDispState > CALTHREE)
-                    gDispState = CALSIGN;
+                    gDispState = OFF0;
                 PORTB = 0x00;
                 PORTC = 0x00;
                 __delay_ms(100);
@@ -363,6 +363,11 @@ void SetCal()
                 break;
             case CALTHREE:
                 DisplayNum(ppm % 10);
+                break;
+            case OFF0:
+            case OFF1:    
+                PORTB = 0x00;
+                PORTC = 0x00;
                 break;
             }
             break;
